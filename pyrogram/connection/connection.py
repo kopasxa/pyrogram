@@ -40,27 +40,21 @@ class Connection:
         self.protocol: TCP = None
 
     async def connect(self):
-        for i in range(Connection.MAX_CONNECTION_ATTEMPTS):
-            self.protocol = TCPAbridged(self.ipv6, self.proxy)
+        self.protocol = TCPAbridged(self.ipv6, self.proxy)
 
-            try:
-                log.info("Connecting...")
-                await self.protocol.connect(self.address)
-            except OSError as e:
-                log.warning("Unable to connect due to network issues: %s", e)
-                await self.protocol.close()
-                raise Exception("Unable to connect due to network issues")
-                # await asyncio.sleep(1)
-            else:
-                log.info("Connected! %s DC%s%s - IPv%s",
-                         "Test" if self.test_mode else "Production",
-                         self.dc_id,
-                         " (media)" if self.media else "",
-                         "6" if self.ipv6 else "4")
-                break
+        try:
+            log.info("Connecting...")
+            await self.protocol.connect(self.address)
+        except OSError as e:
+            log.warning("Unable to connect due to network issues: %s", e)
+            await self.protocol.close()
+            raise Exception("Unable to connect due to network issues")
         else:
-            log.warning("Connection failed! Trying again...")
-            raise ConnectionError
+            log.info("Connected! %s DC%s%s - IPv%s",
+                        "Test" if self.test_mode else "Production",
+                        self.dc_id,
+                        " (media)" if self.media else "",
+                        "6" if self.ipv6 else "4")
 
     async def close(self):
         await self.protocol.close()
