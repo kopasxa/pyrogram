@@ -49,7 +49,7 @@ class Connection:
             except OSError as e:
                 log.warning("Unable to connect due to network issues: %s", e)
                 await self.protocol.close()
-                raise ConnectionError
+                raise Exception("Unable to connect due to network issues")
                 # await asyncio.sleep(1)
             else:
                 log.info("Connected! %s DC%s%s - IPv%s",
