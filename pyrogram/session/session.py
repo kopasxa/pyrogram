@@ -145,6 +145,7 @@ class Session:
             except (OSError, RPCError):
                 await self.stop()
             except Exception as e:
+                log.warning(f"Session closed: {e}")
                 await self.stop()
                 raise e
             else:
